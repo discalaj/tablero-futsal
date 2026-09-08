@@ -1,4 +1,4 @@
-name: Compilar APK
+name: Compilar APK Desde Cero
 
 on:
   push:
@@ -21,9 +21,24 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Reparar Estructura Automáticamente
+      - name: Crear Proyecto Limpio
         run: |
-          flutter create . --overwrite --platforms=android
+          # Guardamos una copia de tu marcador de futsal temporalmente
+          cp lib/main.dart /tmp/main.dart || true
+          
+          # Borramos los archivos viejos para que no estorben
+          rm -rf android lib pubspec.yaml
+          
+          # Creamos el proyecto de Flutter perfecto y original
+          flutter create tablero_futsal --platforms=android
+          
+          # Movemos todo el proyecto a la raíz
+          mv tablero_futsal/* . || true
+          mv tablero_futsal/.* . || true
+          
+          # Devolvemos tu código de futsal a su lugar correcto
+          mkdir -p lib
+          cp /tmp/main.dart lib/main.dart
 
       - name: Construir APK
         run: |
