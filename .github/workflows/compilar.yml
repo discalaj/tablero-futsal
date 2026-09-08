@@ -1,0 +1,33 @@
+name: Compilar APK
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Java Config
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Flutter Config
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Construir APK
+        run: |
+          flutter pub get
+          flutter build apk --release
+
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-futsal
+          path: build/app/outputs/flutter-apk/app-release.apk
